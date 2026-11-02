@@ -16,6 +16,8 @@ Adds a way to work on restricted data without Claude reading it.
   synthetic copy plus a variable/distribution report computed on the synthetic rows only.
   Controls shift, rescale, skew, re-weight, add missingness, and weaken or force correlations.
   Tails are clipped to p1–p99, rare categories merged, near-unique text replaced by fake IDs.
+  Stata variable and value labels carry into the report and the synthetic `.dta`, and a `.dta`
+  above a size threshold is fitted by Stata in batch mode so it never loads into Python.
 - **`restricted-data-guard.py`** (PreToolUse) — denies file tools and shell commands that name a
   `restricted/` or `confidential/` path, except the generator itself. Backed by new `Read`/`Edit`
   deny rules in `.claude/settings.json`, and `data/restricted/` is now gitignored.

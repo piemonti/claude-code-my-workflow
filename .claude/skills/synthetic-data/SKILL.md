@@ -72,17 +72,36 @@ deny rules in `.claude/settings.json`. Background: [`confidential-data.md`](../.
 | `drop` | leave the column out |
 | `type` | force `numeric`, `integer`, `categorical`, `datetime` or `id` |
 
+For a variable with Stata value labels, `weights` keys can be the label text (`"North"`) or
+the code (`"1"`).
+
 `weights` or `skew` on a categorical column samples it independently, so its correlation with
 other columns is lost. Say so to the user if they ask for both.
 
 Command-line `--rows` / `--seed` override the file. `--min-count N` (default 10, the usual
 disclosure threshold) merges rarer categories into `Other`.
 
+## Labels and large Stata files
+
+- **Labels.** For `.dta` input, variable labels and value labels appear in the report (a
+  `Label` column, and `1 North 40%` style level shares). The synthetic `.dta` keeps them, and
+  labelled variables stay numeric codes, so do-files written against it run unchanged on the
+  real file. Dates keep `%td` / `%tc`.
+- **Stata engine.** A `.dta` larger than `--stata-above-mb` (default 250) is fitted by Stata in
+  batch mode: Stata reads the data and writes only fitted summaries (percentile knots, level
+  counts, latent correlations) to a temp folder that is deleted afterwards; Python samples from
+  those, so every control above works the same. Force it with `--engine stata`, or stay in
+  Python with `--engine python`. Stata is found via `$STATA_BIN`, `PATH`, or `/Applications`.
+  The gain is memory, not speed: on 2M rows both engines take about 20 seconds, but Python
+  has to hold the whole file in RAM. If Stata fails, the script reports only its `r()` code;
+  ask the user to run the generated do-file themselves, never read its log.
+
 ## Built-in privacy measures
 
 - Numeric values come from interpolated percentiles, clipped to the real p1–p99 range, so
   exact extremes never appear. Integer columns are rounded, so common values will recur.
-- Rare categories (fewer than `--min-count` rows) become `Other`.
+- Rare categories (fewer than `--min-count` rows) become `Other`; for labelled codes, `Other`
+  gets a new code and the rare levels' labels are dropped from the synthetic label set.
 - Near-unique text columns (IDs, names, free text) become fake `ID_0000001` strings.
 - Columns, level names and approximate shares *are* carried over: that is the point.
   If a column name or a category label is itself sensitive, `drop` it or rename it first.
@@ -94,6 +113,7 @@ disclosure threshold) merges rarer categories into `Other`.
   ([`/disclosure-check`](../disclosure-check/SKILL.md)) before sharing them.
 - Results on synthetic data are for building and debugging code. Estimates, p-values and
   effect sizes come from the real run, done by the user.
+- It reads labels from `.dta` only. SPSS `.sav` labels are dropped (pandas does not keep them).
 - It keeps pairwise rank dependence only. Nonlinear relations, panel structure, and
   within-group ordering are not reproduced.
 - The guard does not catch a command that reads files without naming them (`grep -r .`).

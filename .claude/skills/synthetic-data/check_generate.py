@@ -48,6 +48,38 @@ with tempfile.TemporaryDirectory() as d:
     bad = subprocess.run([sys.executable, HERE / "generate.py", d / "missing.csv"], capture_output=True, text=True)
     assert bad.returncode and "missing.csv" not in bad.stderr, "errors must not echo details"
 
+    # labels: variable + value labels survive into the report and the synthetic .dta, both engines
+    real["region"] = rng.choice([1, 2, 3, 9], n, p=[.5, .3, .198, .002]).astype("int8")
+    real.to_stata(d / "lab.dta", write_index=False, version=118,
+                  variable_labels={"age": "Age in years", "region": "Region of residence"},
+                  value_labels={"region": {1: "North", 2: "South", 3: "East", 9: "Islands"}})
+    (d / "w.json").write_text(json.dumps({"columns": {"region": {"weights": {"North": 0.8, "South": 0.2}}}}))
+    sys.path.insert(0, str(HERE))
+    import generate
+    engines = ["python"] + (["stata"] if generate.find_stata() else [])
+    for eng in engines:
+        flags = ["--engine", "auto", "--stata-above-mb", "0"] if eng == "stata" else ["--engine", "python"]
+        r = subprocess.run([sys.executable, HERE / "generate.py", d / "lab.dta", "--out", d / eng, *flags],
+                           check=True, capture_output=True, text=True)
+        assert f"engine: {eng}" in r.stdout
+        with pd.io.stata.StataReader(d / eng / "lab_synthetic.dta") as rd:
+            assert rd.variable_labels()["age"] == "Age in years"
+            labs = rd.value_labels()["region"]
+        assert labs[1] == "North" and "Islands" not in labs.values(), "rare level's label must not leak"
+        assert "Region of residence" in (d / eng / "lab_report.md").read_text()
+        syn = pd.read_stata(d / eng / "lab_synthetic.dta", convert_categoricals=False)
+        assert set(syn.region.dropna()) <= {1, 2, 3, 4}, "labelled codes stay codes"
+        subprocess.run([sys.executable, HERE / "generate.py", d / "lab.dta", "--out", d / f"{eng}w",
+                        "--config", d / "w.json", *flags], check=True, capture_output=True)
+        syn = pd.read_stata(d / f"{eng}w" / "lab_synthetic.dta", convert_categoricals=False)
+        assert abs((syn.region == 1).mean() - .8) < .04, "weights keyed by label text"
+    if "stata" in engines:
+        (d / "broken.dta").write_bytes(b"not a stata file")
+        r = subprocess.run([sys.executable, HERE / "generate.py", d / "broken.dta", "--engine", "stata"],
+                           capture_output=True, text=True)
+        assert r.returncode and "Stata meta step failed" in r.stderr
+    print(f"labels checked on engines: {', '.join(engines)}")
+
 
 def guard(event):
     out = subprocess.run([sys.executable, GUARD], input=json.dumps(event), capture_output=True, text=True).stdout
