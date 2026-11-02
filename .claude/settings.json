@@ -10,10 +10,24 @@
       "WebSearch",
       "Read(**)"
     ],
-    "deny": []
+    "deny": [
+      "Read(**/restricted/**)",
+      "Read(**/confidential/**)",
+      "Edit(**/restricted/**)",
+      "Edit(**/confidential/**)"
+    ]
   },
   "hooks": {
     "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/restricted-data-guard.py",
+            "timeout": 10
+          }
+        ]
+      },
       {
         "matcher": "Bash|Write|Edit|MultiEdit",
         "hooks": [

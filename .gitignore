@@ -101,3 +101,9 @@ scripts/*/_outputs/
 # renders them during gating). Published HTML lives in docs/, never here.
 Quarto/*.html
 Quarto/*_files/
+
+# Restricted data never enters git (.claude/rules/confidential-data.md)
+data/restricted/
+**/confidential/
+# Synthetic copies are regenerable from the real file
+data/synthetic/

@@ -3,7 +3,7 @@ title: "My Claude Code Setup"
 subtitle: "A Comprehensive Guide to AI-Assisted Academic Workflows: Slides, Papers, Analysis, and Beyond"
 author: "Pedro H. C. Sant'Anna"
 date: "2026-09-27"
-version: "2.6.0"
+version: "2.7.0"
 date-modified: last-modified
 format:
   html:
@@ -154,13 +154,13 @@ Most of the time, you just describe what you want and Claude handles the rest. E
 ::: {.callout-important}
 ## The Bottom Line
 
-**You talk, Claude orchestrates.** The 18 agents, 61 skills, and 37 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
+**You talk, Claude orchestrates.** The 18 agents, 62 skills, and 37 rules exist so you don't have to think about them. Describe your goal, approve the plan, and let the system work.
 :::
 
 ::: {.callout-note}
 ## You Don't Need All of This on Day One
 
-This guide describes the full system --- 18 agents, 61 skills, 37 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
+This guide describes the full system --- 18 agents, 62 skills, 37 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
 :::
 
 ---
@@ -952,7 +952,7 @@ argument-hint: "[filename without .tex extension]"
 ::: {.callout-note}
 ## Built-In Skills
 
-Claude Code ships with built-in skills beyond this template's 61 (as of Aug 2026): `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` reviews recent changes for simplification opportunities, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
+Claude Code ships with built-in skills beyond this template's 62 (as of Aug 2026): `/batch` orchestrates parallel refactoring across your codebase (using git worktrees for isolation), `/simplify` reviews recent changes for simplification opportunities, and `/debug` helps troubleshoot sessions. These complement the academic skills above.
 :::
 
 ## Agents --- Specialized Reviewers {#agents---specialized-reviewers}
@@ -1420,7 +1420,7 @@ The first five layers are your safety net. Anything written to disk survives ind
 
 The session log reminder above is one example of a broader pattern: using **hooks** to enforce rules that Claude might otherwise forget during long sessions. Rules live in context and can be compressed away. Hooks live in `.claude/settings.json` and fire every time, regardless of context state.
 
-The template includes 11 hooks for logging, notifications, context survival, git safety, issue tracking, and protection of the configuration that defines the gates (plus a real git pre-commit hook, `.githooks/pre-commit`, installed via `./scripts/install-hooks.sh`):
+The template includes 12 hooks for logging, notifications, context survival, git safety, issue tracking, and protection of the configuration that defines the gates (plus a real git pre-commit hook, `.githooks/pre-commit`, installed via `./scripts/install-hooks.sh`):
 
 | Hook | Event | What It Does |
 |------|-------|-------------|
@@ -3082,7 +3082,7 @@ The template includes matching LaTeX and Quarto palettes. To customize:
 
 ## Step 4: Creating Custom Skills {#sec-create-skills}
 
-The guide includes 61 [skills](#skills---reusable-slash-commands) for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.
+The guide includes 62 [skills](#skills---reusable-slash-commands) for common academic tasks. But if you have repetitive workflows specific to your domain, you can create your own.
 
 ### When to Create a Skill
 

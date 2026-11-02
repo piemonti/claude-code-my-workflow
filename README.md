@@ -190,7 +190,7 @@ This workflow is designed as a **single hub for an entire research program** —
 ## What's Included
 
 <details>
-<summary><strong>18 agents, 61 skills, 37 rules, 11 hooks</strong> (click to expand)</summary>
+<summary><strong>18 agents, 62 skills, 37 rules, 12 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -269,6 +269,7 @@ This workflow is designed as a **single hub for an entire research program** —
 | `/challenge` | Stress-test a finding against the choices you didn't make — specification curve over the discrete forks, then named sensitivity statistics (E-value, Cinelli–Hazlett RV, Oster δ) against the identifying assumption |
 | `/capture-environment` (v2.0) | Snapshot the computational environment for a replication package — renv.lock + sessionInfo.txt (R), requirements.txt / environment.yml / uv.lock (Python), Stata version + ado list, seeds/RNG, optional pinning Dockerfile |
 | `/power-analysis` (v2.0) | Power / required-N / minimum-detectable-effect for study design — two-arm RCT (clustering/ICC, unequal allocation), multi-arm corrections, simulation-based power for non-standard designs; feeds `/preregister` |
+| `/synthetic-data` (v2.7) | Synthetic copy of a restricted dataset, built locally so Claude never reads the real file; skew controls plus a variable/distribution report on the synthetic data |
 | `/disclosure-check` (v2.0) | Statistical-disclosure-limitation pre-screen for restricted/confidential-data outputs (small cells, complementary-suppression gaps, dominance, PII); CRITICAL/WARNING/OK + gate |
 | `/grant-proposal` (v2.0) | Scaffold an NSF/NIH/ERC/foundation grant proposal by composing primitives (spec → aims/methods, delegated DMP + facilities, coherence pass + requirements checklist) |
 | `/data-management-plan` (v2.0) | Funder-compliant Data Management Plan (NSF / NIH DMS 2023 / ERC / Horizon Europe) — folds in disclosure-avoidance + IRB constraints and a replication-package/environment plan; outputs a draft + funder checklist |

@@ -89,6 +89,7 @@ output as unverified.
 | `/audit-reproducibility` | gates the replication package |
 | `/seven-pass-review` | submission-readiness |
 | the 18-agent review fleet | every fan-out review |
+| `.claude/hooks/restricted-data-guard.py` | decides (PreToolUse deny) — exercised by `.claude/skills/synthetic-data/check_generate.py`, not yet by `hook-battery.sh` |
 | `.claude/hooks/notify.sh` | passive convenience hook (Notification) — the failure mode is a missed nudge, not a false green |
 | `.claude/hooks/context-monitor.py` | passive (PostToolUse) — context-budget nudge; silence is indistinguishable from "nothing to say" |
 | `.claude/hooks/pre-compact.py` | passive (PreCompact) — the save-to-disk checklist before compression |

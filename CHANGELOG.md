@@ -6,6 +6,27 @@ If you have forked this template, see the **Upgrading** section at the bottom fo
 
 ---
 
+## v2.7.0 — 2026-11-02
+
+Adds a way to work on restricted data without Claude reading it.
+
+### Added
+
+- **`/synthetic-data`** — a local script fits a Gaussian copula to the real file and writes a
+  synthetic copy plus a variable/distribution report computed on the synthetic rows only.
+  Controls shift, rescale, skew, re-weight, add missingness, and weaken or force correlations.
+  Tails are clipped to p1–p99, rare categories merged, near-unique text replaced by fake IDs.
+- **`restricted-data-guard.py`** (PreToolUse) — denies file tools and shell commands that name a
+  `restricted/` or `confidential/` path, except the generator itself. Backed by new `Read`/`Edit`
+  deny rules in `.claude/settings.json`, and `data/restricted/` is now gitignored.
+  Its checks live in `.claude/skills/synthetic-data/check_generate.py`; the hook battery is
+  unchanged (312 cases, seconds to run) and the guard is listed as not yet qualified in the ledger.
+
+**Inventory at release: 62 skills, 18 agents, 37 rules, 12 hooks, 10 gates**
+(v2.6.0: 61 skills, 11 hooks; the rest unchanged).
+
+---
+
 ## v2.6.0 — 2026-09-26
 
 A **currency and consistency release.** Claude Opus 5.5 and Fable 5.1 shipped after v2.5.1: the
